@@ -38,7 +38,7 @@ fun EchoCard(
     Surface(
         shape = RoundedCornerShape(8.dp),
         color = MaterialTheme.colorScheme.surface,
-        modifier = Modifier
+        modifier = modifier
             .defaultShadow(RoundedCornerShape(8.dp))
     ) {
         Column(

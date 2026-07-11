@@ -60,7 +60,7 @@ fun EchoTimelineItem(
                 imageVector = ImageVector.vectorResource(echoUi.mood.iconSet.fill),
                 contentDescription = echoUi.title,
                 modifier = Modifier
-                    .padding(top = 8.dp)
+                    .padding(top = 8.dp, end = 8.dp)
                     .size(32.dp)
             )
             Spacer(Modifier.width(12.dp))
