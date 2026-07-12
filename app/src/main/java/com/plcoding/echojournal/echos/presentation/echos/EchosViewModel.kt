@@ -5,16 +5,21 @@ import androidx.lifecycle.viewModelScope
 import com.plcoding.echojournal.R
 import com.plcoding.echojournal.core.presentation.designsystem.dropdowns.Selectable
 import com.plcoding.echojournal.core.presentation.util.UiText
+import com.plcoding.echojournal.echos.presentation.echos.models.AudioCaptureMethod
 import com.plcoding.echojournal.echos.presentation.echos.models.EchoFilterChip
 import com.plcoding.echojournal.echos.presentation.echos.models.MoodChipContent
 import com.plcoding.echojournal.echos.presentation.models.MoodUi
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class EchosViewModel : ViewModel() {
 
@@ -22,6 +27,10 @@ class EchosViewModel : ViewModel() {
 
     private val selectedMoodFilters = MutableStateFlow<List<MoodUi>>(emptyList())
     private val selectedTopicFilters = MutableStateFlow<List<String>>(emptyList())
+
+    private val eventChannel = Channel<EchosEvent>()
+    val events = eventChannel.receiveAsFlow()
+
     private val _state = MutableStateFlow(EchosState())
     val state = _state
         .onStart {
@@ -38,8 +47,22 @@ class EchosViewModel : ViewModel() {
 
     fun onAction(action: EchosAction) {
         when (action) {
-            EchosAction.OnFABLongClick -> {}
-            EchosAction.OnFabClick -> {}
+            EchosAction.OnFABLongClick -> {
+                requestAudioPermission()
+                _state.update {
+                    it.copy(
+                        currentCaptureMethod = AudioCaptureMethod.QUICK
+                    )
+                }
+            }
+            EchosAction.OnFabClick -> {
+                requestAudioPermission()
+                _state.update {
+                    it.copy(
+                        currentCaptureMethod = AudioCaptureMethod.STANDARD
+                    )
+                }
+            }
             is EchosAction.OnRemoveFilters -> {
                 when(action.filterType){
                     EchoFilterChip.MOODS -> selectedMoodFilters.update { emptyList() }
@@ -81,9 +104,15 @@ class EchosViewModel : ViewModel() {
             EchosAction.OnPauseClick -> {}
             is EchosAction.OnPlayEchoClick -> {}
             is EchosAction.OnTrackSizeAvailable -> {}
+            is EchosAction.OnAudioPermissionGranted -> {
+                Timber.d("Recording permission granted")
+            }
         }
     }
 
+    private fun requestAudioPermission() = viewModelScope.launch{
+        eventChannel.send(EchosEvent.RequestAudioPermission)
+    }
     private fun toggleMoodFilter(moodUi: MoodUi){
         selectedMoodFilters.update {
             selectedMoods->
