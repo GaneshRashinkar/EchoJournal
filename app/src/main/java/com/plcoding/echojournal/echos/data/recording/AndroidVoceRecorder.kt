@@ -156,6 +156,7 @@ class AndroidVoceRecorder(
         if(!isRecording || isPaused){
             return
         }
+        isPaused = true
         recorder?.pause()
         durationJob?.cancel()
         amplitudeJob?.cancel()
