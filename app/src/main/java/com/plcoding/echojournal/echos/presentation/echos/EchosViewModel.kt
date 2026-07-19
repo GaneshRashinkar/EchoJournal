@@ -172,7 +172,7 @@ class EchosViewModel(val voiceRecorder: VoiceRecorder) : ViewModel() {
                 eventChannel.send(EchosEvent.RecordingTooShort)
             }
             else{
-                eventChannel.send(EchosEvent.OnDoneRecording)
+                eventChannel.send(EchosEvent.OnDoneRecording(recordingDetails))
             }
         }
 
