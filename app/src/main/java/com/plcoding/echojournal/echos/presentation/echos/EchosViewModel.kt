@@ -55,13 +55,16 @@ class EchosViewModel(val voiceRecorder: VoiceRecorder) : ViewModel() {
 
     fun onAction(action: EchosAction) {
         when (action) {
-            EchosAction.OnFABLongClick -> {
+            EchosAction.OnRequestPermissionQuickRecording -> {
                 requestAudioPermission()
                 _state.update {
                     it.copy(
                         currentCaptureMethod = AudioCaptureMethod.QUICK
                     )
                 }
+            }
+            EchosAction.OnRecordButtonLongClick ->{
+                startRecording(captureMethod = AudioCaptureMethod.QUICK)
             }
             EchosAction.OnFabClick -> {
                 requestAudioPermission()

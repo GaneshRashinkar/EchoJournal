@@ -13,7 +13,8 @@ sealed interface EchosAction {
     data class OnFilterByTopicClick(val topic: String): EchosAction
     data object OnFabClick: EchosAction
     data object OnSettingsClick: EchosAction
-    data object OnFABLongClick: EchosAction
+    data object OnRequestPermissionQuickRecording: EchosAction
+    data object OnRecordButtonLongClick: EchosAction
     data class OnRemoveFilters(val filterType: EchoFilterChip): EchosAction
     data class OnPlayEchoClick(val echoId:Int): EchosAction
     data object OnPauseRecordingClick: EchosAction
