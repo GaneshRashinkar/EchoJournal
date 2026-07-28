@@ -40,7 +40,7 @@ enum class MoodUi(
     SAD(
         iconSet = MoodIconSet(
             fill = R.drawable.emoji_sad,
-            outline = R.drawable.emoji_stressed
+            outline = R.drawable.emoji_sad_outline
         ),
         colorSet = MoodColorSet(
             vivid = Sad80,
