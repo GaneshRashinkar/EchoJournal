@@ -1,6 +1,5 @@
 package com.plcoding.echojournal.core.presentation.designsystem.dropdowns
 
-import android.view.RoundedCorner
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

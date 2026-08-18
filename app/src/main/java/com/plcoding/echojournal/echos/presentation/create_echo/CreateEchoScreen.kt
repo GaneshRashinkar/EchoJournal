@@ -44,7 +44,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.plcoding.echojournal.R
 import com.plcoding.echojournal.core.presentation.designsystem.buttons.PrimaryButton
 import com.plcoding.echojournal.core.presentation.designsystem.buttons.SecondaryButton
@@ -53,6 +52,7 @@ import com.plcoding.echojournal.core.presentation.designsystem.theme.EchoJournal
 import com.plcoding.echojournal.core.presentation.designsystem.theme.secondary70
 import com.plcoding.echojournal.core.presentation.designsystem.theme.secondary95
 import com.plcoding.echojournal.echos.presentation.components.EchoMoodPlayer
+import com.plcoding.echojournal.echos.presentation.create_echo.components.EchoTopicsRow
 import com.plcoding.echojournal.echos.presentation.create_echo.components.SelectMoodSheet
 import com.plcoding.echojournal.echos.presentation.models.MoodUi
 import org.koin.androidx.compose.koinViewModel
@@ -186,7 +186,25 @@ fun CreateEchoScreen(
                     onAction(CreateEchoAction.OnTrackSizeAvailable(it))
                 }
             )
-            //todo: Insert topics flow row
+            EchoTopicsRow(
+                topics = state.topics,
+                addTopicText = state.addTopicText,
+                showCreateTopicOption = state.showCreateTopicOption,
+                showTopicSuggestions = state.showTopicSuggestions,
+                searchResults = state.searchResults,
+                onTopicClick = {
+                    onAction(CreateEchoAction.OnTopicClick(it))
+                },
+                onDismissTopicSuggestions = {
+                    onAction(CreateEchoAction.OnDismissTopicSuggestions)
+                },
+                onRemoveTopicClick = {
+                    onAction(CreateEchoAction.OnRemoveTopicClick(it))
+                },
+                onAddTopicTextChange = {
+                    onAction(CreateEchoAction.OnAddTopicTextChange(it))
+                }
+            )
 
             Row(
                 modifier = Modifier
