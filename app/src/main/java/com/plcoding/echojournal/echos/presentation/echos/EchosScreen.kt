@@ -37,11 +37,11 @@ import com.plcoding.echojournal.echos.presentation.echos.components.EchosTopBar
 import com.plcoding.echojournal.echos.presentation.echos.models.AudioCaptureMethod
 import com.plcoding.echojournal.echos.presentation.echos.models.RecordingState
 import org.koin.androidx.compose.koinViewModel
-import timber.log.Timber
 
 @Composable
 fun EchosRoot(
     onNavigateToCreateEcho:(RecordingDetails) ->Unit,
+    onNavigateToSettings:() -> Unit,
     viewModel: EchosViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -81,7 +81,14 @@ fun EchosRoot(
     }
     EchosScreen(
         state = state,
-        onAction = viewModel::onAction
+        onAction = {
+            action->
+            when(action){
+                is EchosAction.OnSettingsClick ->onNavigateToSettings()
+                else -> Unit
+            }
+            viewModel.onAction(action)
+        }
     )
 }
 
@@ -169,7 +176,7 @@ fun EchosScreen(
                            onAction(EchosAction.OnPlayEchoClick(it))
                        },
                        onPauseClick = {
-                           onAction(EchosAction.OnPauseRecordingClick)
+                           onAction(EchosAction.OnPauseAudioClick)
                        },
                        onTrackSizeAvailable = { trackSize ->
                            onAction(EchosAction.OnTrackSizeAvailable(trackSize))
