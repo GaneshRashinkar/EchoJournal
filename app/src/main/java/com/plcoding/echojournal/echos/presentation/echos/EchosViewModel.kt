@@ -1,5 +1,6 @@
 package com.plcoding.echojournal.echos.presentation.echos
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.plcoding.echojournal.R
@@ -42,9 +43,11 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 class EchosViewModel(
-    val voiceRecorder: VoiceRecorder,
-    val audioPlayer: AudioPlayer,
-    val echoDataSource: EchoDataSource) : ViewModel() {
+    private val voiceRecorder: VoiceRecorder,
+    private val audioPlayer: AudioPlayer,
+    private val echoDataSource: EchoDataSource,
+    private val savedStateHandle: SavedStateHandle
+    ) : ViewModel() {
 
     companion object{
         private val MIN_RECORD_DURATION = 1.5.seconds
@@ -65,6 +68,7 @@ class EchosViewModel(
             if (!hasLoadedInitialData) {
                 observeFilters()
                 observeEchos()
+                fetchNavigationArgs()
                 hasLoadedInitialData = true
             }
         }
@@ -73,6 +77,19 @@ class EchosViewModel(
             started = SharingStarted.WhileSubscribed(5_000L),
             initialValue = EchosState()
         )
+
+    fun fetchNavigationArgs() {
+        val startRecording = savedStateHandle["startRecording"]?:false
+        if(startRecording) {
+            _state.update {
+                it.copy(
+                    currentCaptureMethod = AudioCaptureMethod.STANDARD
+                )
+            }
+            requestAudioPermission()
+        }
+    }
+
     private val filteredEchos = echoDataSource
         .observeEchos()
         .filterByMoodAndTopics()
