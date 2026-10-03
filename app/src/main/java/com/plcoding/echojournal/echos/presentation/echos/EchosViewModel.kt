@@ -313,7 +313,16 @@ class EchosViewModel(
                 eventChannel.send(EchosEvent.RecordingTooShort)
             }
             else{
-                eventChannel.send(EchosEvent.OnDoneRecording(recordingDetails))
+                eventChannel.send(EchosEvent.OnDoneRecording(
+                    details = recordingDetails.copy(
+                        amplitudes = AmplitudeNormalizer.normalize(
+                            sourceAmplitudes = recordingDetails.amplitudes,
+                            trackWidth = 10_000f,
+                            barWidth = 20f,
+                            spacing = 15f
+                        )
+                    )
+                ))
             }
         }
 
